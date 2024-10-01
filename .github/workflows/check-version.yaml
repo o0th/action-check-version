@@ -25,4 +25,4 @@ jobs:
           path: current 
 
       - name: Check-version
-        uses: ./
+        uses: ./current
