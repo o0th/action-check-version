@@ -1,0 +1,12 @@
+{
+  "name": "action-check-version",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Sabato Luca Guadagno <o0th@pm.me>",
+  "license": "MIT",
+  "description": ""
+}

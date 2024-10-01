@@ -1,0 +1,28 @@
+name: check-version 
+
+on:
+  pull_request:
+    branches:
+      - master 
+
+permissions:
+  contents: write
+
+jobs:
+
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          path: master
+
+      - uses: actions/checkout@v4
+        with:
+          path: current 
+
+      - name: Check-version
+        uses: ./
