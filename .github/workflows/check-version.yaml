@@ -19,10 +19,14 @@ jobs:
         with:
           ref: master
           path: master
+          sparse-checkout: |
+            package.json
 
       - uses: actions/checkout@v4
         with:
           path: current 
+          sparse-checkout: |
+            package.json
 
       - name: Check-version
         uses: ./current

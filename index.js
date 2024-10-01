@@ -53,6 +53,6 @@ if (currentVersion[1] > masterVersion[1]) {
 if (currentVersion[2] > masterVersion[2]) {
   process.exit(0)
 } else {
-  core.error(`${currentVersion.join('.')} < ${masterVersion.join('.')}`)
+  core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
   process.exit(1)
 }
