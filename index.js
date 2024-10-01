@@ -39,17 +39,20 @@ const masterVersion = masterMatches.groups.version.split('.')
 if (currentVersion[0] > masterVersion[0]) {
   process.exit(0)
 } else if (currentVersion[0] < masterVersion[0]) {
+  core.error(`${currentVersion.join('.')} < ${masterVersion.join('.')}`)
   process.exit(1)
 }
 
 if (currentVersion[1] > masterVersion[1]) {
   process.exit(0)
 } else if (currentVersion[1] < masterVersion[1]) {
+  core.error(`${currentVersion.join('.')} < ${masterVersion.join('.')}`)
   process.exit(1)
 }
 
 if (currentVersion[2] > masterVersion[2]) {
   process.exit(0)
 } else {
+  core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
   process.exit(1)
 }
