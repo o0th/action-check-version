@@ -55,6 +55,8 @@ if (currentVersion[2] > masterVersion[2]) {
 } else {
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
   core.summary.addHeading('Check version', '2')
-  core.summary.write('Current version is the same as the one in master')
+  core.summary.addRaw('Current version is the same as the one in master')
+  core.summary.addEOL()
+  core.summary.write()
   process.exit(1)
 }
