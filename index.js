@@ -1,6 +1,6 @@
+import mustache from 'mustache'
 import core from '@actions/core'
 import github from '@actions/github'
-import mustache from 'mustache'
 
 const token = core.getInput('token');
 const octokit = github.getOctokit(token)
