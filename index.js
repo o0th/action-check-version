@@ -13,6 +13,9 @@ const [owner, repo] = repository.split('/')
 const currentSha = core.getInput('current-sha')
 const baseSha = core.getInput('base-sha')
 
+const currentBranch = core.getInput('current-branch')
+const baseBranch = core.getInput('base-branch')
+
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
@@ -43,7 +46,6 @@ const masterRequest = await octokit.rest.repos.getContent({
 })
 
 const masterContent = atob(masterRequest.data.content)
-console.log(masterContent)
 
 const masterMatches = masterContent.match(regexes[file])
 const masterLine = currentContent.split(/\r?\n/)
@@ -77,9 +79,9 @@ if (currentVersion[2] > masterVersion[2]) {
     owner,
     repo,
     issue_number: github.context.payload.pull_request.number,
-    body: `Version in\n` +
+    body: `Version in the current branch \`${currentBranch}\`\n` +
       `https://github.com/${owner}/${repo}/blob/${currentSha}/${file}#L${currentLine}\n` +
-      `is the same as\n` +
+      `is the same as in the base branch \`${baseBranch}\`\n` +
       `https://github.com/${owner}/${repo}/blob/${baseSha}/${file}#L${masterLine}\n`
   })
 
