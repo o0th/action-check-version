@@ -11,15 +11,27 @@ const repository = core.getInput('repository')
 const [owner, repo] = repository.split('/')
 
 const currentSha = core.getInput('current-sha')
-const baseSha = core.getInput('base-sha')
-
 const currentBranch = core.getInput('current-branch')
+
+const baseSha = core.getInput('base-sha')
 const baseBranch = core.getInput('base-branch')
+
+const getFiles = async (octokit, owner, repo, ref) => {
+  const request = await octokit.rest.repos.getContent({
+    owner, repo, ref
+  })
+
+  console.log(getFiles)
+  return request.data.map((item) => item.name)
+}
+
+getFiles(octokit, owner, repo, currentSha)
 
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
 }
+
 
 const files = fs.readdirSync(path.join('.'));
 const file = files.find((file) => regexes.hasOwnProperty(file))
