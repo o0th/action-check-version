@@ -65,7 +65,7 @@ if (currentVersion[2] > masterVersion[2]) {
   octokit.rest.pulls.createReview({
     owner,
     repo,
-    pull_number: github.context.payload.pull_request,
+    pull_number: github.context.payload.pull_request.number,
     comments: [{
       path: file,
       position: currentLine,
