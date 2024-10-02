@@ -114,7 +114,7 @@ if (compareResult === 0) {
   process.exit(1)
 }
 
-if (compareResult > 0) {
+if (compareResult < 0) {
   if (comment) {
     await octokit.rest.issues.createComment({
       owner,
