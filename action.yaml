@@ -1,15 +1,15 @@
 name: action-check-version
 
 inputs:
+
   token:
     required: false
     default: ${{ github.token }}
-  repository:
-    required: false
-    default: ${{ github.repository }}
+
   comment:
     required: false
     default: true
+
   comment-same:
     required: false
     default: |
@@ -17,6 +17,7 @@ inputs:
       https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
       is the same as the one in `{{baseBranch}}`
       https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
+
   comment-smaller:
     required: false
     default: |

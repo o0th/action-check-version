@@ -5,8 +5,8 @@ import github from '@actions/github'
 const token = core.getInput('token');
 const octokit = github.getOctokit(token)
 
-const repository = core.getInput('repository')
-const [owner, repo] = repository.split('/')
+const owner = github.context.repo.owner
+const repo = github.context.repo.repo
 
 const headSha = github.context.payload.pull_request.head.sha
 const headBranch = github.context.payload.pull_request.head.ref
