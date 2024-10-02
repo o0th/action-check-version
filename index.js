@@ -21,7 +21,7 @@ const getFiles = async (octokit, owner, repo, ref) => {
     owner, repo, ref
   })
 
-  console.log(getFiles)
+  console.log(request)
   return request.data.map((item) => item.name)
 }
 
