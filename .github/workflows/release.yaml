@@ -1,0 +1,46 @@
+name: release 
+
+on:
+  push:
+    branches:
+      - master 
+    paths:
+      - index.js
+      - action.yaml
+      - package.json
+      - package-lock.json
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: release
+        uses: o0th/action-create-release@v0.0.5
+
+      - uses: o0th/action-musta-me@v0.1.0
+        with:
+          input-file: README.template.md
+          output-file: README.md
+          vars: |
+            {{version}} = ${{ steps.release.outputs.version }}
+            {{file}} = {{file}}
+            {{owner}} = {{owner}}
+            {{repo}} = {{repo}}
+            {{headSha}} = {{headSha}}
+            {{headLine}} = {{headLine}}
+            {{baseSha}} = {{baseSha}}
+            {{baseLine}} = {{baseLine}}
+
+      - run: |
+          git diff
+          git checkout master
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "docs: render readme"
+          git push origin master
