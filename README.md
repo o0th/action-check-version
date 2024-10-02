@@ -27,7 +27,7 @@ jobs:
     steps:
 
       - name: Check-version
-        uses: o0th/action-check-version@v0.0.5
+        uses: o0th/action-check-version@v0.1.0
 ```
 
 ### Options
@@ -39,7 +39,7 @@ smaller than the one in `head`. To disable use
 
 ```yaml
       - name: Check-version
-        uses: o0th/action-check-version@v0.0.5
+        uses: o0th/action-check-version@v0.1.0
         with:
           comment: false
 ```
@@ -58,17 +58,17 @@ one use
 
 ```yaml
       - name: Check-version
-        uses: o0th/action-check-version@v0.0.5
+        uses: o0th/action-check-version@v0.1.0
         with:
           comment-same: |
-            Version in `{{file}}` from `{{headBranch}}`
+            Version in `{{file}}` from ``
             https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
-            is the same as the one in `{{baseBranch}}`
+            is the same as the one in ``
             https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
           comment-smaller: |
-            Version in `{{file}}` from `{{headBranch}}`
+            Version in `{{file}}` from ``
             https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
-            is smaller then the one in `{{baseBranch}}`
+            is smaller then the one in ``
             https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
 ```
 
