@@ -37,6 +37,8 @@ const currentVersion = currentMatches.groups.version.split('.')
 
 const masterContent = fs.readFileSync(path.join('master', file), 'utf8')
 const masterMatches = masterContent.match(regexes[file])
+const masterLine = currentContent.split(/\r?\n/)
+  .findIndex((line) => line.match(regexes[file]))
 
 if (!masterMatches.groups.version) {
   core.error(`Couldn't find version in ${file}`)
@@ -66,7 +68,10 @@ if (currentVersion[2] > masterVersion[2]) {
     owner,
     repo,
     issue_number: github.context.payload.pull_request.number,
-    body: `Increment version in ${file}`
+    body: `Current version in ` +
+      `https://github.com/${owner}/${repo}/blob/${hash}/${file}#L${currentLine}\n` +
+      `is the same as in ` +
+      `https://github.com/${owner}/${repo}/blob/master/${file}#L${masterLine}\n`
   })
 
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
