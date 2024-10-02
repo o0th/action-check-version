@@ -62,15 +62,11 @@ if (currentVersion[1] > masterVersion[1]) {
 if (currentVersion[2] > masterVersion[2]) {
   process.exit(0)
 } else {
-  await octokit.rest.pulls.createReview({
+  await octokit.rest.issues.createComment({
     owner,
     repo,
     pull_number: github.context.payload.pull_request.number,
-    comments: [{
-      path: file,
-      position: currentLine,
-      body: 'Check version'
-    }]
+    body: `Increment version in ${file}`
   })
 
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
