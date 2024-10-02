@@ -71,7 +71,7 @@ if (currentVersion[2] > masterVersion[2]) {
     repo,
     issue_number: github.context.payload.pull_request.number,
     body: `Current version in ` +
-      `https://github.com/${owner}/${repo}/blob/${hash}/${file}#L${currentLine}\n` +
+      `https://github.com/${owner}/${repo}/blob/${sha}/${file}#L${currentLine}\n` +
       `is the same as in ` +
       `https://github.com/${owner}/${repo}/blob/master/${file}#L${masterLine}\n`
   })
