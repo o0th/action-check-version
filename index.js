@@ -28,7 +28,7 @@ if (!file) {
 const currentContent = fs.readFileSync(path.join('current', file), 'utf8')
 const currentMatches = currentContent.match(regexes[file])
 const currentLine = currentContent.split(/\r?\n/)
-  .findIndex((line) => line.match(regexes[file]))
+  .findIndex((line) => line.match(regexes[file])) + 1
 
 if (!currentMatches.groups.version) {
   core.error(`Couldn't find version in ${file}`)
@@ -40,7 +40,7 @@ const currentVersion = currentMatches.groups.version.split('.')
 const masterContent = fs.readFileSync(path.join('master', file), 'utf8')
 const masterMatches = masterContent.match(regexes[file])
 const masterLine = currentContent.split(/\r?\n/)
-  .findIndex((line) => line.match(regexes[file]))
+  .findIndex((line) => line.match(regexes[file])) + 1
 
 if (!masterMatches.groups.version) {
   core.error(`Couldn't find version in ${file}`)
@@ -70,10 +70,8 @@ if (currentVersion[2] > masterVersion[2]) {
     owner,
     repo,
     issue_number: github.context.payload.pull_request.number,
-    body: `Current version in ` +
-      `https://github.com/${owner}/${repo}/blob/${sha}/${file}#L${currentLine}\n` +
-      `is the same as in ` +
-      `https://github.com/${owner}/${repo}/blob/master/${file}#L${masterLine}\n`
+    body: `Update version in\n` +
+      `https://github.com/${owner}/${repo}/blob/${sha}/${file}#L${currentLine}\n`
   })
 
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
