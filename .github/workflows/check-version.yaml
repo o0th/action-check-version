@@ -17,13 +17,6 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
-        with:
-          ref: master
-          path: master
-
-      - uses: actions/checkout@v4
-        with:
-          path: current 
 
       - name: Check-version
-        uses: ./current
+        uses: ./

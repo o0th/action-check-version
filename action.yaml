@@ -7,7 +7,10 @@ inputs:
   repository:
     required: false
     default: ${{ github.repository }}
-  sha:
+  base-sha:
+    required: false
+    default: ${{ github.event.pull_request.base.sha }}
+  current-sha:
     required: false
     default: ${{ github.sha }}
 

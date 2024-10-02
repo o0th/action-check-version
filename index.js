@@ -10,14 +10,15 @@ const octokit = github.getOctokit(token)
 const repository = core.getInput('repository')
 const [owner, repo] = repository.split('/')
 
-const sha = core.getInput('sha');
+const currentSha = core.getInput('current-sha')
+const baseSha = core.getInput('base-sha')
 
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
 }
 
-const files = fs.readdirSync(path.join('current'));
+const files = fs.readdirSync(path.join('.'));
 const file = files.find((file) => regexes.hasOwnProperty(file))
 
 if (!file) {
@@ -37,7 +38,10 @@ if (!currentMatches.groups.version) {
 
 const currentVersion = currentMatches.groups.version.split('.')
 
-const masterContent = fs.readFileSync(path.join('master', file), 'utf8')
+const masterContent = await octokit.rest.repos.getContent({
+  owner, repo, file, ref: baseSha
+})
+
 const masterMatches = masterContent.match(regexes[file])
 const masterLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
@@ -70,8 +74,10 @@ if (currentVersion[2] > masterVersion[2]) {
     owner,
     repo,
     issue_number: github.context.payload.pull_request.number,
-    body: `Update version in\n` +
-      `https://github.com/${owner}/${repo}/blob/${sha}/${file}#L${currentLine}\n`
+    body: `Version in\n` +
+      `https://github.com/${owner}/${repo}/blob/${currentSha}/${file}#L${currentLine}\n` +
+      `is the same as\n` +
+      `https://github.com/${owner}/${repo}/blob/${baseSha}/${file}#L${masterLine}\n`
   })
 
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
