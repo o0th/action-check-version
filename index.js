@@ -45,7 +45,8 @@ if (!file) {
   process.exit(1)
 }
 
-const currentContent = await getFiles(octokit, owner, repo, currentSha, file)
+const currentContent = await getFiles(octokit, owner, repo, currentSha)
+console.log(currentContent)
 const currentMatches = currentContent.match(regexes[file])
 const currentLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
