@@ -50,7 +50,7 @@ const getLine = (content, regex) => {
   return content.split('\n').reduce((accumulator, value, index) => {
     const match = value.match(regex)
     return match?.groups?.version
-      ? [index, match.groups.version]
+      ? [index + 1, match.groups.version]
       : accumulator
   }, [])
 }
