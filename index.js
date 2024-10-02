@@ -8,12 +8,11 @@ const octokit = github.getOctokit(token)
 const repository = core.getInput('repository')
 const [owner, repo] = repository.split('/')
 
-const currentSha = github.context.sha
-const currentBranch = github.context.ref
-console.log(github.context.payload)
+const headSha = github.context.payload.pull_request.head.sha
+const headBranch = github.context.payload.pull_request.head.ref
 
-const baseSha = core.getInput('base-sha')
-const baseBranch = core.getInput('base-branch')
+const baseSha = github.context.payload.pull_request.base.sha
+const baseBranch = github.context.payload.pull_request.base.ref
 
 const comment = core.getInput('comment')
 const commentSame = core.getInput('comment-same')
@@ -63,7 +62,7 @@ const compare = (a, b) => {
   })
 }
 
-const files = await getFiles(octokit, owner, repo, currentSha)
+const files = await getFiles(octokit, owner, repo, headSha)
 const file = matchFile(files, regexes)
 
 if (!file) {
@@ -71,10 +70,10 @@ if (!file) {
   process.exit(1)
 }
 
-const currentContent = await getFile(octokit, owner, repo, currentSha, file)
-const [currentLine, currentVersion] = getLine(currentContent, regexes[file])
+const headContent = await getFile(octokit, owner, repo, headSha, file)
+const [headLine, headVersion] = getLine(headContent, regexes[file])
 
-if (!currentVersion) {
+if (!headVersion) {
   core.error(`Couldn't find version in ${file}`)
   process.exit(1)
 }
@@ -87,7 +86,7 @@ if (!baseVersion) {
   process.exit(1)
 }
 
-const compareResult = compare(currentVersion, baseVersion)
+const compareResult = compare(headVersion, baseVersion)
 
 if (compareResult === 0) {
   if (comment) {
@@ -99,9 +98,9 @@ if (compareResult === 0) {
         owner,
         repo,
         file,
-        currentSha,
-        currentLine,
-        currentBranch,
+        headSha,
+        headLine,
+        headBranch,
         baseSha,
         baseLine,
         baseBranch
@@ -123,9 +122,9 @@ if (compareResult > 0) {
         owner,
         repo,
         file,
-        currentSha,
-        currentLine,
-        currentBranch,
+        headSha,
+        headLine,
+        headBranch,
         baseSha,
         baseLine,
         baseBranch

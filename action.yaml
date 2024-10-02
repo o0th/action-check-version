@@ -7,27 +7,21 @@ inputs:
   repository:
     required: false
     default: ${{ github.repository }}
-  base-sha:
-    required: false
-    default: ${{ github.event.pull_request.base.sha }}
-  base-branch:
-    required: false
-    default: ${{ github.event.pull_request.base.ref }}
   comment:
     required: false
     default: true
   comment-same:
     required: false
     default: |
-      Version in `{{file}}` from `{{currentBranch}}`
-      https://github.com/{{owner}}/{{repo}}/blob/{{currentSha}}/{{file}}#L{{currentLine}}
+      Version in `{{file}}` from `{{headBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
       is the same as the one in `{{baseBranch}}`
       https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
   comment-smaller:
     required: false
     default: |
-      Version in `{{file}}` from `{{currentBranch}}`
-      https://github.com/{{owner}}/{{repo}}/blob/{{currentSha}}/{{file}}#L{{currentLine}}
+      Version in `{{file}}` from `{{headBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
       is smaller then the one in `{{baseBranch}}`
       https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
 
