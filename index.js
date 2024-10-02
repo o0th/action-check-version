@@ -1,4 +1,6 @@
 import mustache from 'mustache'
+mustache.escape = (text) => text
+
 import core from '@actions/core'
 import github from '@actions/github'
 
@@ -22,9 +24,6 @@ const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
 }
-
-mustache.escape = function(text) { return text; };
-console.log(github.context.payload)
 
 const getFiles = async (octokit, owner, repo, ref) => {
   const request = await octokit.rest.repos.getContent({
@@ -134,4 +133,9 @@ if (compareResult > 0) {
       })
     })
   }
+
+  core.setFailed(`Smaller version`)
+  process.exit(1)
 }
+
+process.exit(0)
