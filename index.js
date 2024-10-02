@@ -2,6 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import core from '@actions/core'
+import github from '@actions/github'
+
+const token = core.getInput('token');
+const octokit = github.getOctokit(token)
+
+const repository = core.getInput('repository')
+const [owner, repo] = repository.split('/')
 
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
@@ -18,6 +25,8 @@ if (!file) {
 
 const currentContent = fs.readFileSync(path.join('current', file), 'utf8')
 const currentMatches = currentContent.match(regexes[file])
+const currentLine = currentContent.split(/\r?\n/)
+  .findIndex((line) => line.match(regexes[file]))
 
 if (!currentMatches.groups.version) {
   core.error(`Couldn't find version in ${file}`)
@@ -53,10 +62,17 @@ if (currentVersion[1] > masterVersion[1]) {
 if (currentVersion[2] > masterVersion[2]) {
   process.exit(0)
 } else {
+  octokit.rest.pulls.createReview({
+    owner,
+    repo,
+    pull_number: github.context.payload.pull_request,
+    comments: [{
+      path: file,
+      position: currentLine,
+      body: 'Check version'
+    }]
+  })
+
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
-  core.summary.addHeading('Check version', '2')
-  core.summary.addRaw('Current version is the same as the one in master')
-  core.summary.addEOL()
-  core.summary.write()
-  process.exit(1)
+  return core.setFailed(`Same version`)
 }

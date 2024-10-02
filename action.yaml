@@ -1,5 +1,13 @@
 name: action-check-version
 
+inputs:
+  token:
+    required: false
+    default: ${{ github.token }}
+  repository:
+    required: false
+    default: ${{ github.repository }}
+
 runs:
   using: 'node20'
   main: 'index.js'
