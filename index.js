@@ -39,7 +39,7 @@ if (!currentMatches.groups.version) {
 const currentVersion = currentMatches.groups.version.split('.')
 
 const masterContent = await octokit.rest.repos.getContent({
-  owner, repo, file, ref: baseSha
+  owner, repo, path: file, ref: baseSha
 })
 
 console.log(masterContent)
