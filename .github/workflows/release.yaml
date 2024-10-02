@@ -23,7 +23,7 @@ jobs:
       - id: release
         uses: o0th/action-create-release@v0.0.5
 
-      - uses: o0th/action-musta-me@v0.1.0
+      - uses: o0th/action-mustache-me@v0.1.0
         with:
           input-file: README.template.md
           output-file: README.md
