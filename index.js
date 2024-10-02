@@ -42,6 +42,8 @@ const masterContent = await octokit.rest.repos.getContent({
   owner, repo, file, ref: baseSha
 })
 
+console.log(masterContent)
+
 const masterMatches = masterContent.match(regexes[file])
 const masterLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
