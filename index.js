@@ -10,6 +10,8 @@ const octokit = github.getOctokit(token)
 const repository = core.getInput('repository')
 const [owner, repo] = repository.split('/')
 
+const sha = core.getInput('sha');
+
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/

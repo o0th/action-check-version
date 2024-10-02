@@ -7,6 +7,9 @@ inputs:
   repository:
     required: false
     default: ${{ github.repository }}
+  sha:
+    required: false
+    default: ${{ github.sha }}
 
 runs:
   using: 'node20'
