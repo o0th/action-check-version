@@ -62,7 +62,7 @@ if (currentVersion[1] > masterVersion[1]) {
 if (currentVersion[2] > masterVersion[2]) {
   process.exit(0)
 } else {
-  octokit.rest.pulls.createReview({
+  await octokit.rest.pulls.createReview({
     owner,
     repo,
     pull_number: github.context.payload.pull_request.number,
