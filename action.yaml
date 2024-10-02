@@ -35,7 +35,7 @@ inputs:
       Version in `{{file}}` from `{{currentBranch}}`
       https://github.com/{{owner}}/{{repo}}/blob/{{currentSha}}/{{file}}#L{{currentLine}}
       is smaller then the one in `{{baseBranch}}`
-      https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{basLine}}
+      https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
 
 runs:
   using: 'node20'
