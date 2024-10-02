@@ -1,5 +1,31 @@
 name: action-check-version
 
+inputs:
+
+  token:
+    required: false
+    default: ${{ github.token }}
+
+  comment:
+    required: false
+    default: true
+
+  comment-same:
+    required: false
+    default: |
+      Version in `{{file}}` from `{{headBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
+      is the same as the one in `{{baseBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
+
+  comment-smaller:
+    required: false
+    default: |
+      Version in `{{file}}` from `{{headBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{headSha}}/{{file}}#L{{headLine}}
+      is smaller then the one in `{{baseBranch}}`
+      https://github.com/{{owner}}/{{repo}}/blob/{{baseSha}}/{{file}}#L{{baseLine}}
+
 runs:
   using: 'node20'
   main: 'index.js'
