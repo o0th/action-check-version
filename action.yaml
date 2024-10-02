@@ -1,4 +1,9 @@
 name: action-check-version
+description: check version from common files
+
+branding:
+  icon: git-pull-request
+  color: red
 
 inputs:
 
