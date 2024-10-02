@@ -13,12 +13,6 @@ inputs:
   base-branch:
     required: false
     default: ${{ github.event.pull_request.base.ref }}
-  current-sha:
-    required: false
-    default: ${{ github.sha }}
-  current-branch:
-    required: false
-    default: ${{ github.head_ref }}
   comment:
     required: false
     default: true

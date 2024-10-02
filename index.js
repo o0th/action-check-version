@@ -8,8 +8,8 @@ const octokit = github.getOctokit(token)
 const repository = core.getInput('repository')
 const [owner, repo] = repository.split('/')
 
-const currentSha = core.getInput('current-sha')
-const currentBranch = core.getInput('current-branch')
+const currentSha = github.context.sha
+const currentBranch = github.context.head_ref
 
 const baseSha = core.getInput('base-sha')
 const baseBranch = core.getInput('base-branch')
