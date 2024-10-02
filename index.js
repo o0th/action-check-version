@@ -23,7 +23,8 @@ const regexes = {
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
 }
 
-Mustache.escape = function(text) { return text; };
+mustache.escape = function(text) { return text; };
+console.log(github.context.payload)
 
 const getFiles = async (octokit, owner, repo, ref) => {
   const request = await octokit.rest.repos.getContent({
