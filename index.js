@@ -65,7 +65,7 @@ if (currentVersion[2] > masterVersion[2]) {
   await octokit.rest.issues.createComment({
     owner,
     repo,
-    pull_number: github.context.payload.pull_request.number,
+    issue_number: github.context.payload.pull_request.number,
     body: `Increment version in ${file}`
   })
 
