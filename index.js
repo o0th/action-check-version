@@ -1,8 +1,6 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
 import core from '@actions/core'
 import github from '@actions/github'
+import mustache from 'mustache'
 
 const token = core.getInput('token');
 const octokit = github.getOctokit(token)
@@ -15,6 +13,10 @@ const currentBranch = core.getInput('current-branch')
 
 const baseSha = core.getInput('base-sha')
 const baseBranch = core.getInput('base-branch')
+
+const comment = core.getInput('comment')
+const commentSame = core.getInput('comment-same')
+const commentSmaller = core.getInput('comment-smaller')
 
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
@@ -37,8 +39,31 @@ const getFile = async (octokit, owner, repo, ref, path) => {
   return atob(request.data.content)
 }
 
+const matchFile = (files, regexes) => {
+  return files.find((file) => regexes.hasOwnProperty(file))
+}
+
+const getLine = (content, regex) => {
+  return content.split('\n').reduce((accumulator, value, index) => {
+    const match = value.match(regex)
+    return match?.groups?.version
+      ? [index, match.groups.version]
+      : accumulator
+  }, [])
+}
+
+const compare = (a, b) => {
+  if (a.startsWith(b + "-")) return -1
+  if (b.startsWith(a + "-")) return 1
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "case",
+    caseFirst: "upper"
+  })
+}
+
 const files = await getFiles(octokit, owner, repo, currentSha)
-const file = files.find((file) => regexes.hasOwnProperty(file))
+const file = matchFile(files, regexes)
 
 if (!file) {
   core.error(`Couldn't find any supported file'`)
@@ -46,57 +71,64 @@ if (!file) {
 }
 
 const currentContent = await getFile(octokit, owner, repo, currentSha, file)
-console.log(currentContent)
-const currentMatches = currentContent.match(regexes[file])
-const currentLine = currentContent.split(/\r?\n/)
-  .findIndex((line) => line.match(regexes[file])) + 1
+const [currentLine, currentVersion] = getLine(currentContent, regexes[file])
 
-if (!currentMatches.groups.version) {
+if (!currentVersion) {
   core.error(`Couldn't find version in ${file}`)
   process.exit(1)
 }
 
-const currentVersion = currentMatches.groups.version.split('.')
+const baseContent = await getFile(octokit, owner, repo, baseSha, file)
+const [baseLine, baseVersion] = getLine(baseContent, regexes[file])
 
-const masterContent = await getFile(octokit, owner, repo, baseSha, file)
-const masterMatches = masterContent.match(regexes[file])
-const masterLine = currentContent.split(/\r?\n/)
-  .findIndex((line) => line.match(regexes[file])) + 1
-
-if (!masterMatches.groups.version) {
+if (!baseVersion) {
   core.error(`Couldn't find version in ${file}`)
   process.exit(1)
 }
 
-const masterVersion = masterMatches.groups.version.split('.')
+const compareResult = compare(currentVersion, baseVersion)
 
-if (currentVersion[0] > masterVersion[0]) {
-  process.exit(0)
-} else if (currentVersion[0] < masterVersion[0]) {
-  core.error(`${currentVersion.join('.')} < ${masterVersion.join('.')}`)
-  process.exit(1)
-}
+if (compareResult === 0) {
+  if (comment) {
+    await octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: github.context.payload.pull_request.number,
+      body: mustache.render(commentSame, {
+        owner,
+        repo,
+        file,
+        currentSha,
+        currentLine,
+        currentBranch,
+        baseSha,
+        baseLine,
+        baseBranch
+      })
+    })
+  }
 
-if (currentVersion[1] > masterVersion[1]) {
-  process.exit(0)
-} else if (currentVersion[1] < masterVersion[1]) {
-  core.error(`${currentVersion.join('.')} < ${masterVersion.join('.')}`)
-  process.exit(1)
-}
-
-if (currentVersion[2] > masterVersion[2]) {
-  process.exit(0)
-} else {
-  await octokit.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number: github.context.payload.pull_request.number,
-    body: `Version in \`${file}\` from \`${currentBranch}\`\n` +
-      `https://github.com/${owner}/${repo}/blob/${currentSha}/${file}#L${currentLine}\n` +
-      `is the same as in \`${baseBranch}\`\n` +
-      `https://github.com/${owner}/${repo}/blob/${baseSha}/${file}#L${masterLine}\n`
-  })
-
-  core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
   core.setFailed(`Same version`)
+  process.exit(1)
+}
+
+if (compareResult > 0) {
+  if (comment) {
+    await octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: github.context.payload.pull_request.number,
+      body: mustache.render(commentSmaller, {
+        owner,
+        repo,
+        file,
+        currentSha,
+        currentLine,
+        currentBranch,
+        baseSha,
+        baseLine,
+        baseBranch
+      })
+    })
+  }
 }
