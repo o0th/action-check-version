@@ -74,5 +74,5 @@ if (currentVersion[2] > masterVersion[2]) {
   })
 
   core.error(`${currentVersion.join('.')} = ${masterVersion.join('.')}`)
-  return core.setFailed(`Same version`)
+  core.setFailed(`Same version`)
 }
