@@ -38,10 +38,11 @@ if (!currentMatches.groups.version) {
 
 const currentVersion = currentMatches.groups.version.split('.')
 
-const masterContent = await octokit.rest.repos.getContent({
+const masterRequest = await octokit.rest.repos.getContent({
   owner, repo, path: file, ref: baseSha
 })
 
+const masterContent = atob(masterRequest.data.content)
 console.log(masterContent)
 
 const masterMatches = masterContent.match(regexes[file])
