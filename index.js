@@ -26,7 +26,7 @@ if (!file) {
   process.exit(1)
 }
 
-const currentContent = fs.readFileSync(path.join('current', file), 'utf8')
+const currentContent = fs.readFileSync(path.join('.', file), 'utf8')
 const currentMatches = currentContent.match(regexes[file])
 const currentLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
