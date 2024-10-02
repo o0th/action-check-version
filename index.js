@@ -10,6 +10,7 @@ const [owner, repo] = repository.split('/')
 
 const currentSha = github.context.sha
 const currentBranch = github.context.ref
+console.log(github.context.payload)
 
 const baseSha = core.getInput('base-sha')
 const baseBranch = core.getInput('base-branch')
