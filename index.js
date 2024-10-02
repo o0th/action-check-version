@@ -16,24 +16,28 @@ const currentBranch = core.getInput('current-branch')
 const baseSha = core.getInput('base-sha')
 const baseBranch = core.getInput('base-branch')
 
-const getFiles = async (octokit, owner, repo, ref) => {
-  const request = await octokit.rest.repos.getContent({
-    owner, repo, ref
-  })
-
-  console.log(request)
-  return request.data.map((item) => item.name)
-}
-
-getFiles(octokit, owner, repo, currentSha)
-
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
   'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
 }
 
+const getFiles = async (octokit, owner, repo, ref) => {
+  const request = await octokit.rest.repos.getContent({
+    owner, repo, ref
+  })
 
-const files = fs.readdirSync(path.join('.'));
+  return request.data.map((item) => item.name)
+}
+
+const getFile = async (octokit, owner, repo, ref, path) => {
+  const request = await octokit.rest.repos.getContent({
+    owner, repo, ref, path
+  })
+
+  return atob(request.data.content)
+}
+
+const files = await getFiles(octokit, owner, repo, currentSha)
 const file = files.find((file) => regexes.hasOwnProperty(file))
 
 if (!file) {
@@ -41,7 +45,7 @@ if (!file) {
   process.exit(1)
 }
 
-const currentContent = fs.readFileSync(path.join('.', file), 'utf8')
+const currentContent = await getFiles(octokit, owner, repo, currentSha, file)
 const currentMatches = currentContent.match(regexes[file])
 const currentLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
@@ -53,12 +57,7 @@ if (!currentMatches.groups.version) {
 
 const currentVersion = currentMatches.groups.version.split('.')
 
-const masterRequest = await octokit.rest.repos.getContent({
-  owner, repo, path: file, ref: baseSha
-})
-
-const masterContent = atob(masterRequest.data.content)
-
+const masterContent = await getFile(octokit, owner, repo, baseSha, file)
 const masterMatches = masterContent.match(regexes[file])
 const masterLine = currentContent.split(/\r?\n/)
   .findIndex((line) => line.match(regexes[file])) + 1
