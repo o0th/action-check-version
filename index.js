@@ -79,9 +79,9 @@ if (currentVersion[2] > masterVersion[2]) {
     owner,
     repo,
     issue_number: github.context.payload.pull_request.number,
-    body: `Version in the current branch \`${currentBranch}\`\n` +
+    body: `Version in \`${file}\` in \`${currentBranch}\`\n` +
       `https://github.com/${owner}/${repo}/blob/${currentSha}/${file}#L${currentLine}\n` +
-      `is the same as in the base branch \`${baseBranch}\`\n` +
+      `is the same as in \`${baseBranch}\`\n` +
       `https://github.com/${owner}/${repo}/blob/${baseSha}/${file}#L${masterLine}\n`
   })
 
