@@ -22,21 +22,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: release
-        uses: o0th/action-create-release@v0.0.5
+        uses: o0th/action-create-release@v0.1.0
 
-      - uses: o0th/action-mustache-me@v0.1.0
+      - uses: o0th/action-mustache-me@v0.1.1
         with:
           input-file: README.template.md
           output-file: README.md
           vars: |
-            {{version}} = ${{ steps.release.outputs.version }}
-            {{file}} = {{file}}
-            {{owner}} = {{owner}}
-            {{repo}} = {{repo}}
-            {{headSha}} = {{headSha}}
-            {{headLine}} = {{headLine}}
-            {{baseSha}} = {{baseSha}}
-            {{baseLine}} = {{baseLine}}
+            version = ${{ steps.release.outputs.version }}
+            file = {{file}}
+            owner = {{owner}}
+            repo = {{repo}}
+            headSha = {{headSha}}
+            headLine = {{headLine}}
+            baseSha = {{baseSha}}
+            baseLine = {{baseLine}}
 
       - run: |
           git diff
