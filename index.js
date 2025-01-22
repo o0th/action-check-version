@@ -22,7 +22,8 @@ const commentSmaller = core.getInput('comment-smaller')
 
 const regexes = {
   'package.json': /"version": "(?<version>\d.\d.\d)"/,
-  'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/
+  'build.zig.zon': /.version = "(?<version>\d.\d.\d)"/,
+  'main.go': /const Version = "?<version>\d.\d.\d"/
 }
 
 const getFiles = async (octokit, owner, repo, ref) => {
