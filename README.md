@@ -27,7 +27,7 @@ jobs:
     steps:
 
       - name: Check-version
-        uses: o0th/action-check-version@v0.1.0
+        uses: o0th/action-check-version@v1.0.0
 ```
 
 ### Options
@@ -39,7 +39,7 @@ smaller than the one in `head`. To disable use
 
 ```yaml
       - name: Check-version
-        uses: o0th/action-check-version@v0.1.0
+        uses: o0th/action-check-version@v1.0.0
         with:
           comment: false
 ```
@@ -58,7 +58,7 @@ one use
 
 ```yaml
       - name: Check-version
-        uses: o0th/action-check-version@v0.1.0
+        uses: o0th/action-check-version@v1.0.0
         with:
           comment-same: |
             Version in `{{file}}` from ``
